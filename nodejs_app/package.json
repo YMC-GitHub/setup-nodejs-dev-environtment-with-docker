@@ -5,7 +5,9 @@
     "author": "First Last <ymc.github@gmail.com>",
     "main": "server.js",
     "scripts": {
-      "start": "node server.js"
+      "start": "node ./src/server.js",
+      "test": "node ./test/server.js",
+      "dist": "node ./dist/server.js"
     },
     "dependencies": {
       "express": "^4.16.1"
