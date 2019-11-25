@@ -10,6 +10,7 @@ project_name=project
 # for deps_image_and_container
 ######
 # 容器名字
+deps_volume_name=node_modules
 deps_image_name=
 deps_container_name=node_modules
 # 挂数据卷
