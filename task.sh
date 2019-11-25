@@ -22,18 +22,18 @@ source ${basepath}/conf.sh
 # 出现问题：my_container_name=project
 # 需要注意：win10-B-shell中-执行失败
 # 错误提示："docker exec" requires at least 2 arguments.
-# 错误修复：my_container_name="project" 
+# 错误修复：my_container_name="project"
 ####
 :<<ymc-note-block
 project_work_dir_in_vms="//project"
-my_container_name="project" 
+my_container_name="project"
 docker exec -it --workdir $project_work_dir_in_vms $my_container_name ls
 ymc-note-block
 docker exec -it --workdir $project_path_in_vm $codes_container_name ls
 
 # 执行某一命令
 #2 运行开发源码文件
-#docker exec -it -w $project_path_in_vm $codes_container_name npm run start
+docker exec -it -w $project_path_in_vm $codes_container_name npm run start
 #2 运行测试源码文件
 docker exec -it --workdir $project_path_in_vm $codes_container_name npm run test
 #2 运行部署源码文件

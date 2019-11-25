@@ -9,3 +9,4 @@
 source ${basepath}/init/build_and_run_deps_image.sh
 source ${basepath}/init/build_and_run_code_image.sh
 source ${basepath}/init/copy_from_host_to_vm.sh
+
