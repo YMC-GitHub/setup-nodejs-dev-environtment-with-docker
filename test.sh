@@ -1,19 +1,19 @@
 #!/usr/bin/sh
 
-basepath=$(cd `dirname $0`; pwd)
+THIS_FILE_PATH=$(cd `dirname $0`; pwd)
 # 读取配置
-source ${basepath}/conf.sh
+source ${THIS_FILE_PATH}/conf.sh
 # 打印配置
-source ${basepath}/print_conf.sh
+source ${THIS_FILE_PATH}/print_conf.sh
 
 # 搭建
 # 启动
-source ${basepath}/start.sh
+source ${THIS_FILE_PATH}/start.sh
 # 查看
-source ${basepath}/info.sh
+source ${THIS_FILE_PATH}/info.sh
 # 执行任务
-source ${basepath}/task.sh
+source ${THIS_FILE_PATH}/task.sh
 # 停止
 # 退出
 # 删除
-source ${basepath}/delete.sh
+source ${THIS_FILE_PATH}/delete.sh

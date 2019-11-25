@@ -1,20 +1,31 @@
 #!/usr/bin/sh
 
 #source ./conf.sh
-basepath=$(cd `dirname $0`; pwd)
-echo $basepath
-source ${basepath}/conf.sh
+THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+source ${THIS_FILE_PATH}/conf.sh
 
+config=$(cat <<EOF
+output config value:
 
-echo $project_path_in_phsyics
-echo $nodejs_project_path_in_phsyics
-echo $package_path
-#2 nodejs开发源码文件
-echo $source_dev_path_in_phsyics
-echo $source_dev_path_in_vm
-#2 nodejs测试源码文件
-echo $source_test_path_in_phsyics
-echo $source_test_path_in_vm
-#2 nodejs部署源码文件
-echo $source_dist_path_in_phsyics
-echo $source_dist_path_in_vm
+#project_path_in_phsyics
+$project_path_in_phsyics
+
+#nodejs_project_path_in_phsyics
+$nodejs_project_path_in_phsyics
+#package_path
+$package_path
+#source_dev_path_in_phsyics
+$source_dev_path_in_phsyics
+#source_dev_path_in_vm
+$source_dev_path_in_vm
+#source_test_path_in_phsyics
+$source_test_path_in_phsyics
+#source_test_path_in_vm
+$source_test_path_in_vm
+#source_dist_path_in_phsyics
+$source_dist_path_in_phsyics
+#source_dist_path_in_vm
+$source_dist_path_in_vm
+EOF
+)
+echo "$config"

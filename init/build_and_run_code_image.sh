@@ -1,9 +1,8 @@
 #!/usr/bin/sh
 
 #source ../conf.sh
-basepath=$(cd `dirname $0`; pwd)
-source ${basepath}/conf.sh
-#echo $basepath
+THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+source ${THIS_FILE_PATH}/conf.sh
 
 
 #docker run -itd --volume ${project_path_in_phsyics}:${project_path_in_vm} --volumes-from ${deps_container_name} --name ${codes_container_name} ${codes_container_image_name}

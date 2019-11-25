@@ -1,8 +1,8 @@
 #!/usr/bin/sh
 
 #source ../conf.sh
-basepath=$(cd `dirname $0`; pwd)
-source ${basepath}/conf.sh
+THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+source ${THIS_FILE_PATH}/conf.sh
 
 # 创建一个数据卷来缓存依赖目录node_modules
 # 并暴露 deps_volume_path 作为挂载路径

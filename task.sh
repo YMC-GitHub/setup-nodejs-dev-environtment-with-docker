@@ -1,8 +1,8 @@
 #!/usr/bin/sh
 
 #source ./conf.sh
-basepath=$(cd `dirname $0`; pwd)
-source ${basepath}/conf.sh
+THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+source ${THIS_FILE_PATH}/conf.sh
 
 # 安装一个类库
 #docker exec -it -w $project_path_in_vm npm install lodash
