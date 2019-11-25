@@ -30,3 +30,7 @@ source_test_path_in_phsyics=$(path_resolve "$nodejs_project_path_in_phsyics" "$s
 #relative to nodejs_project_path_in_phsyics
 source_dist_path_in_phsyics=$(path_resolve "$nodejs_project_path_in_phsyics" "$source_dist_path_in_phsyics")
 
+codes_container_image_name=${program_languague_name}:${program_languague_version}-${os_name}
+source_dev_path_in_vm="${project_path_in_vm}"
+source_test_path_in_vm="${project_path_in_vm}"
+source_dist_path_in_vm="${project_path_in_vm}"

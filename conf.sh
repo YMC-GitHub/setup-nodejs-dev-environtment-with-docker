@@ -64,4 +64,6 @@ source_test_path_in_vm="${project_path_in_vm}"
 source_dist_path_in_phsyics="dist"
 source_dist_path_in_vm="${project_path_in_vm}"
 
+source ${THIS_FILE_PATH}/passed-cli-arg.sh
+
 source ${THIS_FILE_PATH}/caculate-config.sh
