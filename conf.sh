@@ -1,5 +1,7 @@
 #!/usr/bin/sh
 
+THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+
 ######
 # for common
 ######
@@ -22,9 +24,10 @@ os_image_name=alpine
 # for codes_image_and_container
 ######
 # 工程目录
-# fix some errors ,using "\\" replace "\" on win host
+# it can be absolute path,if it is relative,relative to RUN_SRCIPT_PATH
 project_path_in_phsyics="/mnt/code-store/Shell/setup-nodejs-develop-environtment-with-docker"
-# fix some errors ,using "//" replace "/"
+#project_path_in_phsyics="./setup-nodejs-develop-environtment-with-docker"
+#project_path_in_phsyics="./blog"
 project_path_in_vm="/project" #/project
 # 数据卷名
 deps_container_name=node_modules
@@ -43,15 +46,22 @@ codes_container_name=project
 ######
 # for copy_from_host_to_vm.sh
 ######
-nodejs_project_path_in_phsyics="${project_path_in_phsyics}/nodejs_app"
+# it can be absolute path,if it is relative,relative to RUN_SRCIPT_PATH
+nodejs_project_path_in_phsyics="nodejs_app"
 #2 nodejs工程包的描述
-package_path="${nodejs_project_path_in_phsyics}/package.json"
+# it can be absolute path,if it is relative,relative to nodejs_project_path_in_phsyics
+package_path="package.json"
 #2 nodejs开发源码文件
-source_dev_path_in_phsyics="${nodejs_project_path_in_phsyics}/src"
+# it can be absolute path,if it is relative,relative to nodejs_project_path_in_phsyics
+source_dev_path_in_phsyics="src"
 source_dev_path_in_vm="${project_path_in_vm}"
 #2 nodejs测试源码文件
-source_test_path_in_phsyics="${nodejs_project_path_in_phsyics}/test"
+# it can be absolute path,if it is relative,relative to nodejs_project_path_in_phsyics
+source_test_path_in_phsyics="test"
 source_test_path_in_vm="${project_path_in_vm}"
 #2 nodejs部署源码文件
-source_dist_path_in_phsyics="${nodejs_project_path_in_phsyics}/dist"
+# it can be absolute path,if it is relative,relative to nodejs_project_path_in_phsyics
+source_dist_path_in_phsyics="dist"
 source_dist_path_in_vm="${project_path_in_vm}"
+
+source ${THIS_FILE_PATH}/caculate-config.sh
