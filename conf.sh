@@ -25,9 +25,10 @@ os_image_name=alpine
 ######
 # 工程目录
 # it can be absolute path,if it is relative,relative to RUN_SRCIPT_PATH
-project_path_in_phsyics="/mnt/code-store/Shell/setup-nodejs-develop-environtment-with-docker"
+#project_path_in_phsyics="/mnt/code-store/Shell/setup-nodejs-develop-environtment-with-docker"
 #project_path_in_phsyics="./setup-nodejs-develop-environtment-with-docker"
 #project_path_in_phsyics="./blog"
+project_path_in_phsyics="/mnt/code-store/Shell/setup-nodejs-develop-environtment-with-docker/nodejs_app"
 project_path_in_vm="/project" #/project
 # 数据卷名
 deps_container_name=node_modules
@@ -47,7 +48,7 @@ codes_container_name=project
 # for copy_from_host_to_vm.sh
 ######
 # it can be absolute path,if it is relative,relative to RUN_SRCIPT_PATH
-nodejs_project_path_in_phsyics="nodejs_app"
+nodejs_project_path_in_phsyics="."
 #2 nodejs工程包的描述
 # it can be absolute path,if it is relative,relative to nodejs_project_path_in_phsyics
 package_path="package.json"
