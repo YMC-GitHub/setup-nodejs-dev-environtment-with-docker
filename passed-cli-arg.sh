@@ -18,12 +18,15 @@ USAGE_MSG=$(cat <<EOF
 
 # some config:
    see detail in conf.sh
+
+# read conf order:
+  conf.sh->conf.txt->cli arg
 EOF
 )
 
 
 GETOPT_ARGS_SHORT_RULE="--options h,d,"
-GETOPT_ARGS_LONG_RULE="--long help,debug,project_path_in_phsyics:,project_path_in_vm:,deps_container_name:,program_languague_name:,program_languague_version:,os_name:,os_version:,codes_container_image_name:,codes_container_name:,nodejs_project_path_in_phsyics:,package_path:,source_dev_path_in_phsyics:,source_dev_path_in_vm:,source_test_path_in_phsyics:,source_test_path_in_vm:,source_dist_path_in_phsyics:,source_dist_path_in_vm:"
+GETOPT_ARGS_LONG_RULE="--long help,debug,conf:,project_path_in_phsyics:,project_path_in_vm:,deps_container_name:,program_languague_name:,program_languague_version:,os_name:,os_version:,codes_container_image_name:,codes_container_name:,nodejs_project_path_in_phsyics:,package_path:,source_dev_path_in_phsyics:,source_dev_path_in_vm:,source_test_path_in_phsyics:,source_test_path_in_vm:,source_dist_path_in_phsyics:,source_dist_path_in_vm:"
 ###
 #设置参数规则
 ###
@@ -42,6 +45,10 @@ do
     case $1 in
     --project_path_in_phsyics)
     arg_project_path_in_phsyics=$2
+    shift 2
+    ;;
+    --conf)
+    arg_conf=$2
     shift 2
     ;;
     --project_path_in_vm)
@@ -125,6 +132,8 @@ do
     esac
 done
 
+# 读取配置文件
+source ${THIS_FILE_PATH}/read-config-file.sh
 
 if [ -n "$arg_source_dist_path_in_vm" ]
 then
