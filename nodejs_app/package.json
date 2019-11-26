@@ -5,6 +5,7 @@
   "author": "First Last <ymc.github@gmail.com>",
   "main": "server.js",
   "scripts": {
+    "build": "node ./build/gen-dist.js",
     "start": "node ./src/server.js",
     "test": "node ./test/server.js",
     "dist": "node ./dist/server.js"
