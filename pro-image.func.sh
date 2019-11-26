@@ -108,7 +108,11 @@ EOF
 # 删除虚悬镜像
 # docker rmi $(docker images -q -f dangling=true)
 function local_none_image() {
-  docker rmi $(docker images -q -f dangling=true)
+  local list=
+  list=$(docker images -q -f dangling=true)
+  if [ -n "$list" ]; then
+    docker rmi "$list"
+  fi
 }
 # 删除某些镜像
 function local_delete_image_by_tag() {
@@ -134,4 +138,16 @@ function local_delete_image_by_tag() {
       docker image rm "$key"
     fi
   done
+}
+
+###
+# 推送镜像
+###
+function push_image() {
+  local tag=
+  tag=test
+  if [ -n "${1}" ]; then
+    tag="${1}"
+  fi
+  docker push "${image_repo}:$tag"
 }
