@@ -5,7 +5,7 @@
 
 # ---- Base Node ----
 # 基础镜像nodejs
-FROM node:8.16.0-alpine AS base
+FROM node:10.16.3-alpine AS base
 # 维护人员
 LABEL maintainer "hualei03042013@163.com"
 # 定义变量
@@ -35,7 +35,7 @@ RUN npm run build
 
 # --- pro with Alpine ----
 # 产品镜像nodejs
-FROM node:8.16.0-alpine AS pro
+FROM node:10.16.3-alpine AS pro
 # 定义变量
 ENV PROJECT_DIR=/app/nodejs/xx
 # 工作目录
