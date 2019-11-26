@@ -6,15 +6,15 @@
 ```sh
 # 搭建
 # 启动
-./start.sh
+./dev-start.sh
 # 查看
 ./info.sh
 # 执行任务
-./task.sh
+./dev-task.sh
 # 停止
 # 退出
 # 删除
-./delete.sh
+./dev=delete.sh
 ```
 
 
