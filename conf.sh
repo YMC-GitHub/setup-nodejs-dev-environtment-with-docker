@@ -9,7 +9,7 @@ THIS_FILE_PATH=$(
 # for common
 ######
 # 工程名字
-project_name=app_nodejs_xx
+project_name=nodejs_app_nodejs_app
 
 ######
 # for deps_image_and_container
@@ -19,7 +19,7 @@ deps_volume_name=node_modules
 deps_image_name=
 deps_container_name=node_modules
 # 挂数据卷
-deps_volume_path=/nodejs/app/xx/node_modules
+deps_volume_path=/nodejs/app/nodejs_app/node_modules
 # 操作系统
 os_image_name=alpine
 
@@ -32,7 +32,7 @@ os_image_name=alpine
 #project_path_in_phsyics="./setup-nodejs-develop-environtment-with-docker"
 #project_path_in_phsyics="./blog"
 project_path_in_phsyics="/mnt/code-store/Shell/setup-nodejs-develop-environtment-with-docker/nodejs_app"
-project_path_in_vm="/nodejs/app/xx" #"/project" #/project
+project_path_in_vm="/nodejs/app/nodejs_app" #"/project" #/project
 # 数据卷名
 deps_volume_name=node_modules
 # 编程语言
@@ -44,7 +44,7 @@ os_version=3.9
 # 容器镜像
 codes_container_image_name=${program_languague_name}:${program_languague_version}-${os_name}
 # 容器名字
-codes_container_name=app_nodejs_xx
+codes_container_name=nodejs_app_nodejs_app
 #codes_container_name="project"
 
 ######

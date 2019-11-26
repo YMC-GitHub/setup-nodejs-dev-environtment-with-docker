@@ -9,7 +9,7 @@ FROM node:10.16.3-alpine AS base
 # 维护人员
 LABEL maintainer "hualei03042013@163.com"
 # 定义变量
-ENV PROJECT_DIR=/app/nodejs/xx
+ENV PROJECT_DIR=/nodejs/app/nodejs_app
 # 工作目录
 WORKDIR $PROJECT_DIR
 
@@ -37,19 +37,19 @@ RUN npm run build
 # 产品镜像nodejs
 FROM node:10.16.3-alpine AS pro
 # 定义变量
-ENV PROJECT_DIR=/app/nodejs/xx
+ENV PROJECT_DIR=/nodejs/app/nodejs_app
 # 工作目录
 WORKDIR $PROJECT_DIR
 # 安装依赖
 # 可选命令-使用serve包部署静态文件
 # RUN npm -g install serve
 # 拷贝文件
-COPY --from=dependencies /app/nodejs/xx/package.json ./
+COPY --from=dependencies /nodejs/app/nodejs_app/package.json ./
 RUN npm install --only=production
-COPY --from=build /app/nodejs/xx ./
+COPY --from=build /nodejs/app/nodejs_app ./
 
 # 环境变量
-ENV VM_MOUNT_PATH=/app/nodejs/xx \ 
+ENV VM_MOUNT_PATH=/nodejs/app/nodejs_app \ 
     APP_PORT=7001
 
 # 挂数据卷
