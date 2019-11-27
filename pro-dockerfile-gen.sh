@@ -120,6 +120,9 @@ EOF
 )
 #echo "$DOCKER_FILE_TXT"
 echo "generate dockerfile :${nodejs_app_path}/Dockerfile"
+#删除注释
+#删除空行
+DOCKER_FILE_TXT=$(echo "$DOCKER_FILE_TXT" | sed "s/^ *#.*//g" | sed "/^ *$/d")
 echo "$DOCKER_FILE_TXT" >"${nodejs_app_path}/Dockerfile"
 
 #### 参考文献
