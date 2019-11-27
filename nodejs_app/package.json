@@ -5,9 +5,18 @@
   "author": "First Last <ymc.github@gmail.com>",
   "main": "server.js",
   "scripts": {
-    "build": "node ./build/gen-dist.js",
-    "start": "node ./src/server.js",
-    "test": "node ./test/server.js",
-    "dist": "node ./dist/server.js"
+    "dynamic:dev": "nodemon --inspect=0.0.0.0 src/server.js",
+    "dynamic:pro": "node ./src/server.js",
+    "dynamic:test": "node ./test/server.js",
+    "static-code:build": "node ./build/gen-dist.js",
+    "static-code:serve": "node ./dist/server.js"
+  },
+  "dependencies": {
+    "koa": "^2.11.0",
+    "koa-static": "^5.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.1"
   }
 }

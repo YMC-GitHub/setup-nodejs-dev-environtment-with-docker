@@ -86,16 +86,25 @@ ENV PROJECT_DIR=$VM_PROJECT_PATH
 # 工作目录
 WORKDIR \$PROJECT_DIR
 # 安装依赖
-# 可选命令-使用serve包部署静态文件
+# optional, using serve lib to serve the static file
 # RUN npm -g install serve
 # 拷贝文件
+# optional, copy the node_modules dir from deps stage
+# COPY --from=dependencies node_modules node_modules
+# or: install only production
 COPY --from=dependencies $VM_PROJECT_PATH/package.json ./
 RUN npm install --only=production
-COPY --from=build $VM_PROJECT_PATH ./
+# copy the build file from build stage
+COPY --from=build dist dist
+# copy the source file from pm
+COPY $PM_PROJECT_PATH ./
 
+# 设置参数
+#ARG NODE_ENV=development
 # 环境变量
 ENV VM_MOUNT_PATH=$VM_MOUNT_PATH \ 
-    APP_PORT=$VM_APP_PORT
+    APP_PORT=$VM_APP_PORT  
+#    NODE_ENV=\${NODE_ENV}
 
 # 挂数据卷
 VOLUME ["\$VM_MOUNT_PATH"]
@@ -112,10 +121,14 @@ RUN apk add -U tzdata && echo "Asia/Shanghai" > /etc/localtime && apk del tzdata
 
 # 启动服务
 # 不要使用 npm，也不用 shell form，避免 node 进程无法收到 SIGTERM 信号。
+
 #2 部署静态文件
 #CMD ["serve", "-s", "dist", "-p", "\$APP_PORT"]
+#2 开发动态文件
+#CMD ["nodemon", "--inspect=0.0.0.0 src/index.js"]
 #2 部署动态文件
-CMD ["node", "./dist/server.js"]
+CMD ["node", "./src/server.js"]
+
 EOF
 )
 #echo "$DOCKER_FILE_TXT"

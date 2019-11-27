@@ -14,10 +14,11 @@ ENV PROJECT_DIR=/nodejs/app/nodejs_app
 WORKDIR $PROJECT_DIR
 COPY --from=dependencies /nodejs/app/nodejs_app/package.json ./
 RUN npm install --only=production
-COPY --from=build /nodejs/app/nodejs_app ./
+COPY --from=build dist dist
+COPY ./ ./
 ENV VM_MOUNT_PATH=/nodejs/app/nodejs_app \ 
-    APP_PORT=7001
+APP_PORT=7001
 VOLUME ["$VM_MOUNT_PATH"]
 EXPOSE $APP_PORT
-RUN apk add -U tzdata && echo "Asia/Shanghai" > /etc/localtime && apk del tzdata
-CMD ["node", "./dist/server.js"]
+RUN apk add -U tzdata && echo "Asia/Shanghai" >/etc/localtime && apk del tzdata
+CMD ["node", "./src/server.js"]

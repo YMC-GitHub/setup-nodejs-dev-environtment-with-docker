@@ -1,7 +1,10 @@
 #!/usr/bin/sh
 
 #source ../conf.sh
-THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+THIS_FILE_PATH=$(
+  cd $(dirname $0)
+  pwd
+)
 source ${THIS_FILE_PATH}/conf.sh
 
 #2 nodejs工程包的描述
@@ -11,4 +14,4 @@ docker cp ${source_dev_path_in_phsyics} ${codes_container_name}:${project_path_i
 #2 nodejs测试源码文件
 docker cp ${source_test_path_in_phsyics} ${codes_container_name}:${project_path_in_vm}
 #2 nodejs部署源码文件
-docker cp ${source_dist_path_in_phsyics} ${codes_container_name}:${project_path_in_vm}
+#docker cp ${source_dist_path_in_phsyics} ${codes_container_name}:${project_path_in_vm}
