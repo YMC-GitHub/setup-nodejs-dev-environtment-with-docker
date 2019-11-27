@@ -1,6 +1,9 @@
 #!/bin/sh
 
-THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+THIS_FILE_PATH=$(
+  cd $(dirname $0)
+  pwd
+)
 source ${THIS_FILE_PATH}/conf.sh
 
 #nodejs_app_path="./nodejs_app"
@@ -12,9 +15,9 @@ VM_APP_PORT=7001
 VM_MOUNT_PATH="$VM_PROJECT_PATH"
 PM_MOUNT_PATH="$PM_PROJECT_PATH"
 NODEJS_VERSION="$program_languague_version" #"10.16.3"
-OS="$os_image_name" #alpine
+OS="$os_image_name"                         #alpine
 
-cat > "$nodejs_app_path/.dockerignore" <<EOF
+cat >"$nodejs_app_path/.dockerignore" <<EOF
 .git/
 node_modules/
 .vscode/
@@ -33,8 +36,8 @@ EOF
 # 静态文件镜像--生成静态文件
 # 生成环境镜像--最终运行环境
 
-
-DOCKER_FILE_TXT=$(cat <<EOF
+DOCKER_FILE_TXT=$(
+  cat <<EOF
 ###
 # dockerfile on app/nodejs/xx for pro env
 ###
@@ -112,11 +115,10 @@ EOF
 )
 #echo "$DOCKER_FILE_TXT"
 echo "generate dockerfile :${nodejs_app_path}/Dockerfile"
-echo "$DOCKER_FILE_TXT" > "${nodejs_app_path}/Dockerfile"
-
+echo "$DOCKER_FILE_TXT" >"${nodejs_app_path}/Dockerfile"
 
 #### 参考文献
-:<<reference
+: <<reference
 如何编写最佳的Dockerfile
 https://juejin.im/post/5922e07cda2f60005d602dcd
 
@@ -128,4 +130,10 @@ https://blog.csdn.net/weixin_34037515/article/details/91478989
 
 Docker数据卷Volume实现文件共享、数据迁移备份（三）
 https://www.cnblogs.com/it-peng/p/11388231.html
+
+Docker容器启动退出解决方案
+https://blog.csdn.net/wzygis/article/details/80547144
+
+Docker为什么刚运行就退出了?
+https://blog.csdn.net/meegomeego/article/details/50707532
 reference

@@ -1,9 +1,14 @@
 #!/usr/bin/sh
 
 #source ./conf.sh
-THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+THIS_FILE_PATH=$(
+  cd $(dirname $0)
+  pwd
+)
 source ${THIS_FILE_PATH}/conf.sh
 
+#nowhash=$(date "+%Y-%m-%d %H:%M:%S" | md5sum |cut -d ' ' -f1|cut -b 1-8)
+#codes_container_name="${codes_container_name}-dev-${nowhash}"
 # 安装一个类库
 docker exec -it -w $project_path_in_vm $codes_container_name npm install lodash
 #docker exec -it -w /project project npm install
