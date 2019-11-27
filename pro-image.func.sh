@@ -41,7 +41,18 @@ image_repo=$(get_image_repo "pub")
 ###
 #构建所有阶段
 function build_image_all_stage() {
-  docker build --tag "${image_repo}:${nodejs_app_tag}" "$pm_nodejs_app_path"
+  local tag=
+  local dockerfile=
+  tag="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    tag="${1}"
+  fi
+  dockerfile="$pm_nodejs_app_path"
+  if [ -n "${1}" ]; then
+    dockerfile="${1}"
+  fi
+
+  docker build --tag "${image_repo}:${tag}" "$dockerfile"
 }
 #构建某一阶段
 function build_image_by_stage() {
@@ -91,6 +102,69 @@ function list_image_by_repo() {
 function run_pro_image_for_test() {
   docker run --rm -it -p 7001:7001 "${image_repo}:stage-pro"
 }
+function run_pro_image() {
+  local name=
+  local tag=
+  local list=
+  name="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    name="${1}"
+  fi
+  tag=stage-pro
+  if [ -n "${2}" ]; then
+    tag="${2}"
+  fi
+  #echo "$name=${image_repo}:$tag"
+  list=$(docker inspect -f='{{.ID}}={{.Name}}' $(docker ps -aq) | grep "$name")
+  if [ $? -eq 0 ]; then
+    echo "has been created before"
+  else
+    #docker run -dit -p 7001:7001 --name "$name" ${image_repo}:$tag
+    #fix:exited (0)  after starting and finishing main process
+    docker run -dit -p 7001:7001 --name "$name" ${image_repo}:$tag /bin/sh -c "tail -f /dev/null"
+  fi
+}
+
+###
+# 列出容器
+###
+function list_pro_container_by_name() {
+  local list=
+  local name=
+  name="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    name="${1}"
+  fi
+  #list=$(docker inspect -f='{{.ID}}={{.Name}}' $(docker ps -aq) | grep "$name")
+  list=$(docker inspect -f='{{.ID}}={{.Name}}' $(docker ps -aq) | grep "$name")
+  echo "list CM $name"
+  echo "$list"
+}
+
+function inspect_pro_container_by_name() {
+  local list=
+  local name=
+  name="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    name="${1}"
+  fi
+
+  echo "inspect CM $name"
+  docker inspect "$name"
+}
+
+###
+# 启动容器
+###
+function start_pro_container_by_name() {
+  local name=
+  name="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    name="${1}"
+  fi
+  echo "start CM $name"
+  docker start "$name"
+}
 
 ###
 # 进入容器
@@ -100,6 +174,71 @@ function goto_pro_container_for_test() {
 ls
 exit
 EOF
+}
+function goto_pro_container_by_name() {
+  local name=
+  name="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    name="${1}"
+  fi
+  echo "goto CM $name"
+  echo "docker exec -it --workdir ${project_path_in_vm} ${name} /bin/sh"
+  docker exec -it --workdir $project_path_in_vm $name /bin/sh
+}
+
+###
+# 关闭容器
+###
+function stop_pro_container_by_name() {
+  local name=
+  name="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    name="${1}"
+  fi
+  echo "stop CM $name"
+  docker stop "$name"
+}
+
+###
+# 查看容器日志
+###
+function log_pro_container_by_name() {
+  local name=
+  name="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    name="${1}"
+  fi
+  echo "see CM $name log"
+  docker logs "$name"
+}
+
+###
+# 删除容器
+###
+function delete_pro_container_by_name() {
+  local list=
+  local REG_SHELL_COMMOMENT_PATTERN=
+  local list_ARR=
+  local var=
+  local key=
+  local name=
+  name="$nodejs_app_name"
+  if [ -n "${1}" ]; then
+    name="${1}"
+  fi
+
+  list=$(docker inspect -f='{{.ID}}={{.Name}}' $(docker ps -aq) | grep "$name")
+  REG_SHELL_COMMOMENT_PATTERN="^#"
+  list_ARR=(${list//,/ })
+  for var in ${list_ARR[@]}; do
+    if [[ "$var" =~ $REG_SHELL_COMMOMENT_PATTERN ]]; then
+      echo "$var" >/dev/null 2>&1
+    else
+      key=$(echo "$var" | cut -d "=" -f1 | tr "[:upper:]" "[:lower:]")
+      echo "rm pro container $key"
+      docker container rm "$key"
+    fi
+  done
 }
 
 ###
@@ -147,6 +286,7 @@ function push_image() {
   local tag=
   tag=test
   if [ -n "${1}" ]; then
+
     tag="${1}"
   fi
   docker push "${image_repo}:$tag"
