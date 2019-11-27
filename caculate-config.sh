@@ -1,6 +1,9 @@
 #!/usr/bin/sh
 
-THIS_FILE_PATH=$(cd `dirname $0`; pwd)
+THIS_FILE_PATH=$(
+  cd $(dirname $0)
+  pwd
+)
 source ${THIS_FILE_PATH}/path_resolve.sh
 
 THIS_PROJECT_PATH="$THIS_FILE_PATH"
@@ -34,3 +37,4 @@ codes_container_image_name=${program_languague_name}:${program_languague_version
 source_dev_path_in_vm="${project_path_in_vm}"
 source_test_path_in_vm="${project_path_in_vm}"
 source_dist_path_in_vm="${project_path_in_vm}"
+project_path_in_pm="$project_path_in_phsyics"
