@@ -20,6 +20,11 @@ OS="$os_image_name"                         #alpine
 cat >"$nodejs_app_path/.dockerignore" <<EOF
 .git/
 node_modules/
+npm-debug.log
+Dockerfile*
+docker-compose*
+.gitignore
+readme.md
 .vscode/
 EOF
 
