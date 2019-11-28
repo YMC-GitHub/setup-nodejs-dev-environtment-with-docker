@@ -6,17 +6,6 @@ THIS_FILE_PATH=$(
 )
 source ${THIS_FILE_PATH}/conf.sh
 
-###
-# 计算变量
-###
-pm_nodejs_app_path="${nodejs_project_path_in_phsyics}"
-nodejs_app_path="$project_path_in_vm" #"/nodejs/app/name"
-nodejs_app_name=$(echo "$nodejs_app_path" | sed "s#/#_#g" | sed "s#-#_#g" | sed "s#^_##g" | tr "[:upper:]" "[:lower:]")
-#nodejs_app_xx
-nodejs_app_tag="1.0.0"
-nodejs_app_namespace="yemiancheng"
-nodejs_app_version="1.0.0"
-
 function get_image_repo() {
   local type="pub"
   local rp_host=
@@ -35,7 +24,6 @@ function get_image_repo() {
   res="${rp_host}/${rp_ns}/${rp_name}"
   echo "$res"
 }
-image_repo=$(get_image_repo "pub")
 ###
 # 构建镜像
 ###
@@ -48,10 +36,11 @@ function build_image_all_stage() {
     tag="${1}"
   fi
   dockerfile="$pm_nodejs_app_path"
-  if [ -n "${1}" ]; then
-    dockerfile="${1}"
+  #fix:unable to prepare context: path "1.0.0" not found
+  if [ -n "${2}" ]; then
+    dockerfile="${2}"
   fi
-
+  echo "build image ${image_repo}:${tag} with dockerfile $dockerfile"
   docker build --tag "${image_repo}:${tag}" "$dockerfile"
 }
 #构建某一阶段
@@ -97,12 +86,9 @@ function list_image_by_repo() {
 }
 
 ###
-# 运行镜像(测试)
+# 运行镜像
 ###
-function run_pro_image_for_test() {
-  docker run --rm -it -p 7001:7001 "${image_repo}:stage-pro"
-}
-function run_pro_image() {
+function run_image() {
   local name=
   local tag=
   local list=
@@ -121,124 +107,16 @@ function run_pro_image() {
   else
     #docker run -dit -p 7001:7001 --name "$name" ${image_repo}:$tag
     #fix:exited (0)  after starting and finishing main process
-    docker run -dit -p 7001:7001 --name "$name" ${image_repo}:$tag /bin/sh -c "tail -f /dev/null"
+    #docker run -dit -p 7001:7001 --name "$name" ${image_repo}:$tag /bin/sh -c "tail -f /dev/null"
+    docker volume create "$deps_volume_name"
+    docker run -itd \
+      -p 7001:7001 \
+      -p 8080:8080 \
+      -p 9229:9229 \
+      --volume ${project_path_in_phsyics}:${project_path_in_vm} \
+      --volume $deps_volume_name:$deps_volume_path \
+      --name "$name" ${image_repo}:$tag /bin/sh -c "tail -f /dev/null"
   fi
-}
-
-###
-# 列出容器
-###
-function list_pro_container_by_name() {
-  local list=
-  local name=
-  name="$nodejs_app_name"
-  if [ -n "${1}" ]; then
-    name="${1}"
-  fi
-  #list=$(docker inspect -f='{{.ID}}={{.Name}}' $(docker ps -aq) | grep "$name")
-  list=$(docker inspect -f='{{.ID}}={{.Name}}' $(docker ps -aq) | grep "$name")
-  echo "list CM $name"
-  echo "$list"
-}
-
-function inspect_pro_container_by_name() {
-  local list=
-  local name=
-  name="$nodejs_app_name"
-  if [ -n "${1}" ]; then
-    name="${1}"
-  fi
-
-  echo "inspect CM $name"
-  docker inspect "$name"
-}
-
-###
-# 启动容器
-###
-function start_pro_container_by_name() {
-  local name=
-  name="$nodejs_app_name"
-  if [ -n "${1}" ]; then
-    name="${1}"
-  fi
-  echo "start CM $name"
-  docker start "$name"
-}
-
-###
-# 进入容器
-###
-function goto_pro_container_for_test() {
-  docker run --rm -it "${image_repo}:stage-pro" /bin/sh <<EOF
-ls
-exit
-EOF
-}
-function goto_pro_container_by_name() {
-  local name=
-  name="$nodejs_app_name"
-  if [ -n "${1}" ]; then
-    name="${1}"
-  fi
-  echo "goto CM $name"
-  echo "docker exec -it --workdir ${project_path_in_vm} ${name} /bin/sh"
-  docker exec -it --workdir $project_path_in_vm $name /bin/sh
-}
-
-###
-# 关闭容器
-###
-function stop_pro_container_by_name() {
-  local name=
-  name="$nodejs_app_name"
-  if [ -n "${1}" ]; then
-    name="${1}"
-  fi
-  echo "stop CM $name"
-  docker stop "$name"
-}
-
-###
-# 查看容器日志
-###
-function log_pro_container_by_name() {
-  local name=
-  name="$nodejs_app_name"
-  if [ -n "${1}" ]; then
-    name="${1}"
-  fi
-  echo "see CM $name log"
-  docker logs "$name"
-}
-
-###
-# 删除容器
-###
-function delete_pro_container_by_name() {
-  local list=
-  local REG_SHELL_COMMOMENT_PATTERN=
-  local list_ARR=
-  local var=
-  local key=
-  local name=
-  name="$nodejs_app_name"
-  if [ -n "${1}" ]; then
-    name="${1}"
-  fi
-
-  list=$(docker inspect -f='{{.ID}}={{.Name}}' $(docker ps -aq) | grep "$name")
-  REG_SHELL_COMMOMENT_PATTERN="^#"
-  list_ARR=(${list//,/ })
-  for var in ${list_ARR[@]}; do
-    if [[ "$var" =~ $REG_SHELL_COMMOMENT_PATTERN ]]; then
-      echo "$var" >/dev/null 2>&1
-    else
-      key=$(echo "$var" | cut -d "=" -f1 | tr "[:upper:]" "[:lower:]")
-      echo "rm pro container $key"
-      docker container rm "$key"
-    fi
-  done
 }
 
 ###

@@ -24,10 +24,15 @@ echo "list file in CM node_modules ..."
 docker exec -it --workdir $project_path_in_vm $codes_container_name ls node_modules
 
 # 执行某一命令
-#2 生成部署源码文件(静态)
+#2 生成部署文件(静态)
 docker exec -it --workdir $project_path_in_vm $codes_container_name npm run static-code:build
-#2 运行部署源码文件(静态)
-docker exec -it --workdir $project_path_in_vm $codes_container_name npm run static-code:serve
+#2 运行测试文件(静态)
+#docker exec -it --workdir $project_path_in_vm $codes_container_name npm run static-code:test
+#2 运行部署文件(静态)
+#docker exec -it --workdir $project_path_in_vm $codes_container_name npm run static-code:serve
+#docker exec -it --workdir $project_path_in_vm $codes_container_name npm run static-code:pro
+#docker exec -it --workdir $project_path_in_vm $codes_container_name npm run static-code:dev
+
 #2 运行开发源码文件(动态)
 #docker exec -it --workdir $project_path_in_vm $codes_container_name npm run dynamic:dev
 #2 运行测试源码文件(动态)
