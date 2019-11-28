@@ -57,67 +57,86 @@ LABEL maintainer "hualei03042013@163.com"
 ENV PROJECT_DIR=$VM_PROJECT_PATH
 # 工作目录
 WORKDIR \$PROJECT_DIR
+# 设置时区
+#RUN rm /etc/localtime && echo "Asia/Shanghai" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata \
+#  && npm config set color false
+#RUN apk add -U tzdata && echo "Asia/Shanghai" > /etc/localtime && apk del tzdata
+#RUN apk add tzdata && echo "Asia/Shanghai" > /etc/localtime && apk del tzdata
 
 # ---- Dependencies ----
 # 依赖镜像nodejs
-FROM base AS dependencies
+FROM base AS deps
 # 拷贝文件
 COPY ${PM_PROJECT_PATH}package*.json ./
 # 安装依赖
 RUN npm install
+# test:where the WORKDIR is
+#RUN now=\$(pwd) && echo "env PROJECT_DIR=\$PROJECT_DIR now=\$now"
 
 # ---- Copy Files/Build ----
 # 静态镜像nodejs
 #用 .dockerignore 来屏蔽掉不必要的文件
 #对 react/vue/angular 打包，生成静态文件
 
-FROM dependencies AS build
+FROM deps AS build
 # 拷贝项目
 COPY ${PM_PROJECT_PATH} ./
 COPY ${PM_PROJECT_PATH}.dockerignore ./
 # 生成文件
 RUN npm run build
+# test:where the WORKDIR and dist dir are
+#RUN nowPath=\$(pwd) && echo "env PROJECT_DIR=\$PROJECT_DIR nowPath=\$nowPath" && ls ./dist
 
 # --- pro with Alpine ----
 # 产品镜像nodejs
-FROM node:${NODEJS_VERSION}-${OS} AS pro
+#FROM node:${NODEJS_VERSION}-${OS} AS pro
+FROM base AS  pro
 # 定义变量
-ENV PROJECT_DIR=$VM_PROJECT_PATH
+#ENV PROJECT_DIR=$VM_PROJECT_PATH
 # 工作目录
-WORKDIR \$PROJECT_DIR
+#WORKDIR \$PROJECT_DIR
+# test:where the WORKDIR is
+#RUN nowPath=\$(pwd) && echo "env PROJECT_DIR=\$PROJECT_DIR nowPath=\$nowPath" && ls ./
 # 安装依赖
+# part-01
 # optional, using serve lib to serve the static file
 # RUN npm -g install serve
-# 拷贝文件
+# part-02-way01
 # optional, copy the node_modules dir from deps stage
-# COPY --from=dependencies node_modules node_modules
+# COPY --from=deps $VM_PROJECT_PATH/node_modules node_modules
 # or: install only production
-COPY --from=dependencies $VM_PROJECT_PATH/package.json ./
+# part-02-way02
+COPY --from=deps $VM_PROJECT_PATH/package.json ./
 RUN npm install --only=production
+# part-03
 # copy the build file from build stage
-COPY --from=build dist dist
+# fix:no such file or directory
+COPY --from=build $VM_PROJECT_PATH/dist dist
 # copy the source file from pm
 COPY $PM_PROJECT_PATH ./
+# test:where the WORKDIR and the project dir are
+#RUN nowPath=\$(pwd) && echo "env PROJECT_DIR=\$PROJECT_DIR nowPath=\$nowPath" && ls ./
 
 # 设置参数
 #ARG NODE_ENV=development
 # 环境变量
 ENV VM_MOUNT_PATH=$VM_MOUNT_PATH \ 
-    APP_PORT=$VM_APP_PORT  
+    APP_PORT=$VM_APP_PORT
+#    APP_PORT=$VM_APP_PORT \ 
 #    NODE_ENV=\${NODE_ENV}
 
 # 挂数据卷
 VOLUME ["\$VM_MOUNT_PATH"]
 
 # 暴露端口
-EXPOSE \$APP_PORT
+#EXPOSE ["\$APP_PORT","3000","9229","8080"]
+#EXPOSE ["\$APP_PORT"]
+EXPOSE \$APP_PORT \
+  3000 \
+  9229 \
+  8080
 # 监控检查
 #HEALTHCHECK CMD curl --fail http://localhost:\$APP_PORT || exit 1
-
-# 设置时区
-#RUN rm /etc/localtime && echo "Asia/Shanghai" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata \
-#  && npm config set color false
-RUN apk add -U tzdata && echo "Asia/Shanghai" > /etc/localtime && apk del tzdata
 
 # 启动服务
 # 不要使用 npm，也不用 shell form，避免 node 进程无法收到 SIGTERM 信号。
