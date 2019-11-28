@@ -5,9 +5,10 @@
   "author": "First Last <ymc.github@gmail.com>",
   "main": "server.js",
   "scripts": {
-    "dynamic:dev": "nodemon --inspect=0.0.0.0 src/server.js",
+    "dynamic:dev": "nodemon --inspect=0.0.0.0 src/server.js 7001",
     "dynamic:pro": "node ./src/server.js",
     "dynamic:test": "node ./test/server.js",
+    "build": "node ./build/gen-dist.js",
     "static-code:build": "node ./build/gen-dist.js",
     "static-code:serve": "node ./dist/server.js"
   },

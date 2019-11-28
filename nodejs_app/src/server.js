@@ -12,7 +12,7 @@ app.use(publicFiles);
 const name = "in src source"
 // response
 app.use(ctx => {
-  ctx.body = `I am ${name}`;
+  ctx.body = `I am ${name}|yemiancheng`;
 });
 
 app.listen(7001);
